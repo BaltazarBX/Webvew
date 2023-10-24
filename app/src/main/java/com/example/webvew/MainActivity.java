@@ -3,12 +3,41 @@ package com.example.webvew;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+    private WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        webView = findViewById(R.id.webView);
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webView.addJavascriptInterface(new JavaScriptInterface(), "appInterface");
+
+    }
+
+    private void loadURL(View view){
+        EditText urlText = findViewById(R.id.urltext);
+        String url = urlText.getText().toString();
+        if (url.isEmpty()){
+            Toast.makeText(this, "Ingresa una URL", Toast.LENGTH_SHORT).show();
+        }else{
+            webView.loadUrl(url);
+        }
+    }
+
+    private class JavaScriptInterface {
+        @android.webkit.JavascriptInterface
+        public void showToast(String message){
+        }
     }
 }
